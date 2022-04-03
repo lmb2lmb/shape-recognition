@@ -17,14 +17,16 @@ def get_train_data(path: str, classes_to_keep: List):
     train_labels = np.ndarray.flatten(np.array(silhouettes['train_labels']))
     train_data = silhouettes['train_data']
     data_to_use = [(np.reshape(np.array(x, dtype=np.float32), (16,16)), classes_to_keep.index(train_labels[i])) for (i, x) in enumerate(train_data) if train_labels[i] in classes_to_keep]
-    data = np.array([paste_black(backgrounds.rand_background((20,20)),x[0]) for x in data_to_use])
-    labels = np.array([x[1] for x in data_to_use])
+    data, labels = generate_dataset(data_to_use, 1000, (20,20))
+    #data = np.array([paste_black(backgrounds.rand_background((20,20)),x[0]) for x in data_to_use])
+    #labels = np.array([x[1] for x in data_to_use])
 
     val_labels =  np.ndarray.flatten(np.array(silhouettes['val_labels']))
     val_data = silhouettes['val_data']
     val_to_use = [(np.reshape(np.array(x, dtype=np.float32), (16,16)), classes_to_keep.index(val_labels[i])) for (i, x) in enumerate(val_data) if val_labels[i] in classes_to_keep]
-    val_data = np.array([paste_black(backgrounds.rand_background((20,20)),x[0]) for x in val_to_use])
-    val_labels = np.array([x[1] for x in val_to_use])
+    val_data, val_labels = generate_dataset(val_to_use, 500, (20,20))
+    #val_data = np.array([paste_black(backgrounds.rand_background((20,20)),x[0]) for x in val_to_use])
+    #val_labels = np.array([x[1] for x in val_to_use])
 
     return data, labels, val_data, val_labels
 
@@ -45,4 +47,24 @@ def paste_black(target, shape):
     res = np.array(res, dtype=np.float) / 255
     res = np.reshape(res, (res.shape[0], res.shape[1], 1))
     return res
+
+
+# data is a list of tuples in the form (shape, label)
+def generate_dataset(data, data_per_class, image_shape):
+    dataset = []
+    labels = []
+    all_labels = set([x[1] for x in data])
+    for label in all_labels:
+        relevent_shapes = [x for x in data if x[1] == label]
+        for i in range(data_per_class):
+            shape = relevent_shapes[i % len(relevent_shapes)][0]
+            datum = paste_black(backgrounds.rand_background(image_shape), shape)
+            dataset.append(datum)
+            labels.append(label)
+    # now we turn the dataset and labeles into arrays and then shuffle and return them.
+    dataset = np.array(dataset)
+    labels = np.array(labels)
+    perm = np.random.permutation(len(dataset))
     
+
+    return dataset[perm], labels[perm]
