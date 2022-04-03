@@ -6,6 +6,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from pyrsistent import v
 import scipy
+
 image_shape = image_height, image_width, image_channels = 1500, 2000, 3
 def circle(image, center_y , center_x, radius, x, y, color):
     image = np.copy(image)
