@@ -1,4 +1,5 @@
 import random
+import cv2
 import numpy as np
 
 
@@ -24,7 +25,7 @@ def rand_background(shape):
 def noise(shape):
     return np.random.randint(0, 256, shape).astype(np.uint8)
 def white(shape):
-    return np.full(shape, 255)
+    return np.full(shape, 255).astype(np.uint8) * 255
 def checker(shape):
     checker_height = (shape[0] // 8) + 1
     checker_width = (shape[1] // 8) + 1
@@ -34,13 +35,13 @@ def checker(shape):
     checker_half_2 = np.concatenate([white_tile, black_tile], axis=0)
     complete_checker = np.concatenate([checker_half_1, checker_half_2], axis=1)
     checker_board = np.tile(complete_checker, (4,4))
-    return checker_board[:shape[0],:shape[1]]
+    return checker_board[:shape[0],:shape[1]].astype(np.uint8) * 255
 def horz_stripe(shape):
     indicies = np.indices(shape)[0]
-    return ((indicies % 2) * 255).astype(np.uint8)
+    return ((indicies % 2) ).astype(np.uint8) * (255*255) 
 def vert_stripe(shape):
     indicies = np.indices(shape)[1]
-    return ((indicies % 2) * 255).astype(np.uint8)
+    return ((indicies % 2) * 255).astype(np.uint8) * 255
 def gradient_vert(shape):
     indicies = np.indices(shape)[0]
     indicies = indicies / np.max(indicies)
@@ -56,5 +57,4 @@ def triangles(shape):
     indices = np.indices((tile_height, tile_width))
     tile[indices[0] > indices[1]] = 255
     full_board = np.tile(tile, (8,8))
-    return full_board[:shape[0],:shape[1]]
-
+    return full_board[:shape[0],:shape[1]].astype(np.uint8) * 255
