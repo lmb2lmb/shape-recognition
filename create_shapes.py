@@ -1,15 +1,9 @@
 from ast import List
 from random import randint
-from matplotlib.pyplot import draw
-import PIL
 from PIL import Image
 from PIL import ImageChops
-import scipy
-import skimage.draw
 import numpy as np
-import math
 import backgrounds
-import cv2
 from scipy import io
 
 def get_train_data(path: str, classes_to_keep: List):
@@ -18,15 +12,11 @@ def get_train_data(path: str, classes_to_keep: List):
     train_data = silhouettes['train_data']
     data_to_use = [(np.reshape(np.array(x, dtype=np.float32), (16,16)), classes_to_keep.index(train_labels[i])) for (i, x) in enumerate(train_data) if train_labels[i] in classes_to_keep]
     data, labels = generate_dataset(data_to_use, 1000, (40,40))
-    #data = np.array([paste_black(backgrounds.rand_background((20,20)),x[0]) for x in data_to_use])
-    #labels = np.array([x[1] for x in data_to_use])
 
     val_labels =  np.ndarray.flatten(np.array(silhouettes['val_labels']))
     val_data = silhouettes['val_data']
     val_to_use = [(np.reshape(np.array(x, dtype=np.float32), (16,16)), classes_to_keep.index(val_labels[i])) for (i, x) in enumerate(val_data) if val_labels[i] in classes_to_keep]
-    val_data, val_labels = generate_dataset(val_to_use, 500, (40,40))
-    #val_data = np.array([paste_black(backgrounds.rand_background((20,20)),x[0]) for x in val_to_use])
-    #val_labels = np.array([x[1] for x in val_to_use])
+    val_data, val_labels = generate_dataset(val_to_use, 500, (40,40 ))
 
     return data, labels, val_data, val_labels
 
