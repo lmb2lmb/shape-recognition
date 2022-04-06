@@ -1,8 +1,21 @@
 import random
 import numpy as np
 
-
+random.seed(21)
+np.random.seed(21)
 def rand_background(shape):
+    """
+    Method that generates one of the eight possible backrounds possible
+  
+    Extended description of function.
+  
+    Parameters:
+    shape (int, int): The shape of the backround to be generated
+  
+    Returns:
+    Array: Numpy array of ints that is one of the eight possible backrounds
+  
+    """
     rand_int = random.randint(0, 7)
     if rand_int == 0:
         return noise(shape)
@@ -21,6 +34,9 @@ def rand_background(shape):
     elif rand_int == 7:
         return triangles(shape)
 
+'''
+Methods to make the differnt potntial backrounds for rand_background
+'''
 def noise(shape):
     return np.random.randint(0, 256, shape).astype(np.uint8)
 def white(shape):
